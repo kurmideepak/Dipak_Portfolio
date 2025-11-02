@@ -1,0 +1,12 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480' viewBox='0 0 800 480'>
+  <defs>
+    <linearGradient id='g1' x1='0' x2='1'>
+      <stop offset='0' stop-color='#7C3AED'/>
+      <stop offset='1' stop-color='#06B6D4'/>
+    </linearGradient>
+  </defs>
+  <rect width='100%' height='100%' fill='#0B1220' />
+  <rect x='40' y='40' width='720' height='400' rx='20' fill='url(#g1)' opacity='0.14' />
+  <text x='50%' y='48%' dominant-baseline='middle' text-anchor='middle' font-family='Poppins, sans-serif' font-size='40' font-weight='700' fill='white'>Chat App</text>
+  <text x='50%' y='62%' dominant-baseline='middle' text-anchor='middle' font-family='Poppins, sans-serif' font-size='14' fill='rgba(255,255,255,0.7)'>React • Socket.io • Node</text>
+</svg>
