@@ -77,7 +77,7 @@ function InteractiveProfile({ src, size = 256 }){
 
 export default function Home(){
   return (
-    <main>
+    <main className="pt-20 md:pt-24">
       <section className="min-h-screen flex items-center">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <motion.div initial={{opacity:0, x:-30}} animate={{opacity:1, x:0}} transition={{delay:0.1}}>

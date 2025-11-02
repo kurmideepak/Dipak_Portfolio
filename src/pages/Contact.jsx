@@ -8,7 +8,7 @@ import { FaMapMarkerAlt } from "react-icons/fa"; // Only FA5 icon
 
 export default function Contact(){
   return (
-    <main className="min-h-screen py-12">
+    <main className="min-h-screen pt-20 md:pt-24 pb-12">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold">Get in Touch</h2>
