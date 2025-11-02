@@ -1,6 +1,10 @@
 import React from 'react'
 import ContactForm from '../components/ContactForm'
-import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa'
+//import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa6";
+import { FaMapMarkerAlt } from "react-icons/fa"; // Only FA5 icon
+
+
 
 export default function Contact(){
   return (

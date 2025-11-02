@@ -1,7 +1,8 @@
 import React from "react"
 import profileImg from "../assets/profile.jpg"
 import { motion } from "framer-motion"
-import { FaDownload, FaGraduationCap, FaCode, FaLightbulb } from "react-icons/fa"
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa6";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 function AnimatedImage({ src, alt }) {
   const [isHovered, setIsHovered] = React.useState(false);

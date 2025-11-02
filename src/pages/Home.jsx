@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import profileImg from '../assets/profile.jpg'
 import ProjectCard from '../components/ProjectCard'
-import { FaExternalLinkAlt, FaGithub } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa6";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import ContactForm from '../components/ContactForm'
 
 const roles = ['Developer', 'Coder', 'Designer']
