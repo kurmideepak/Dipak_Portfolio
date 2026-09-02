@@ -1,14 +1,73 @@
 import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { useLocation } from 'react-router-dom'
+import DragonCursor from './DragonCursor'
+
+import FlowingCursor from './FlowingCursor'
 
 export default function Cursor(){
   const [pos, setPos] = useState({x: -100, y: -100})
+  const [isHovering, setIsHovering] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
+  const location = useLocation()
+
   useEffect(()=>{
-    const move = (e)=> setPos({x:e.clientX, y:e.clientY})
-    window.addEventListener('mousemove', move)
+    if (typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+      setIsTouch(true)
+      return
+    }
+
+    const move = (e)=> {
+      setPos({x:e.clientX, y:e.clientY})
+      
+      // Check if hovering over an interactive element
+      const target = e.target;
+      const isInteractive = target.closest('a, button, input, textarea, [role="button"]') !== null;
+      setIsHovering(isInteractive);
+    }
+    
+    window.addEventListener('mousemove', move, { passive: true })
     return ()=> window.removeEventListener('mousemove', move)
   },[])
+
+  if (isTouch) return null;
+
+  // On Home page, render the Dragon cursor instead of the standard one
+  if (location.pathname === '/') {
+    return <DragonCursor />
+  }
+
+  // On About page, render the new Flowing Cursor
+  if (location.pathname === '/about') {
+    return <FlowingCursor />
+  }
+
+  // Standard cursor for all other pages
   return (
-    <div style={{left: pos.x, top: pos.y}} className="pointer-events-none fixed z-50 w-4 h-4 rounded-full bg-primary/90 transform -translate-x-1/2 -translate-y-1/2 shadow-lg">
-    </div>
+    <motion.div 
+      className="pointer-events-none fixed z-[100] transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center mix-blend-difference"
+      animate={{
+        x: pos.x,
+        y: pos.y,
+        scale: isHovering ? 2.5 : 1,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 500,
+        damping: 28,
+        mass: 0.5
+      }}
+    >
+      <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${isHovering ? 'bg-white' : 'bg-white'}`} />
+      {isHovering && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="absolute w-full h-full rounded-full border-[0.5px] border-white/50"
+        />
+      )}
+    </motion.div>
   )
 }
+
+
