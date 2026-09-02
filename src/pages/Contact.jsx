@@ -84,7 +84,7 @@ export default function Contact() {
                   </div>
                 </a>
 
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <a href="https://github.com/kurmideepak" target="_blank" rel="noreferrer" className="contact-hover flex-1 flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-white/40 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 hover:border-cyan-400/50 hover:bg-white/60 dark:hover:bg-white/10 transition-all group backdrop-blur-md" data-cursor-text="VISIT">
                     <FaGithub className="text-2xl text-gray-700 dark:text-gray-300 group-hover:text-cyan-500 group-hover:-translate-y-1 transition-all" />
                     <span className="text-sm font-semibold">GitHub</span>

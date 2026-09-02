@@ -163,7 +163,7 @@ const InteractiveProfile = ({ smoothX, smoothY }) => {
   return (
     <motion.div 
       style={{ x: pX, y: pY }}
-      className="relative z-10 w-64 h-64 md:w-80 md:h-80 lg:w-[350px] lg:h-[350px] mx-auto mt-12 lg:mt-0 cursor-pointer"
+      className="relative z-10 w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-[350px] lg:h-[350px] mx-auto mt-12 lg:mt-0 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -335,12 +335,12 @@ export default function Hero() {
 
             {/* CTA & Socials */}
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center lg:justify-start mb-10">
-              <div className="flex gap-4 w-full sm:w-auto">
-                <Link to="/projects">
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <Link to="/projects" className="w-full sm:w-auto">
                   <motion.button 
                     whileHover={{ y: -4, scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-full sm:w-auto group relative px-8 py-3.5 rounded-full bg-[linear-gradient(135deg,#2563eb,#06b6d4)] text-white font-bold shadow-[0_8px_20px_rgba(37,99,235,0.2)] dark:shadow-[0_8px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_25px_rgba(6,182,212,0.4)] transition-all duration-300 overflow-hidden text-center"
+                    className="w-full group relative px-8 py-3.5 rounded-full bg-[linear-gradient(135deg,#2563eb,#06b6d4)] text-white font-bold shadow-[0_8px_20px_rgba(37,99,235,0.2)] dark:shadow-[0_8px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_25px_rgba(6,182,212,0.4)] transition-all duration-300 overflow-hidden text-center"
                   >
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                     <span className="relative flex items-center justify-center gap-2 drop-shadow-sm">
@@ -350,11 +350,11 @@ export default function Hero() {
                   </motion.button>
                 </Link>
                 
-                <Link to="/contact">
+                <Link to="/contact" className="w-full sm:w-auto">
                   <motion.button 
                     whileHover={{ y: -4, scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-full sm:w-auto relative group px-8 py-3.5 rounded-full bg-white/40 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white font-bold backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none hover:border-blue-300/50 dark:hover:border-blue-400/50"
+                    className="w-full relative group px-8 py-3.5 rounded-full bg-white/40 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white font-bold backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none hover:border-blue-300/50 dark:hover:border-blue-400/50"
                   >
                     <span className="relative drop-shadow-sm">Start a Project</span>
                   </motion.button>

@@ -26,7 +26,7 @@ export default function HomeCTA() {
             className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-500/20 blur-[120px] rounded-full pointer-events-none" 
           />
           
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight drop-shadow-sm relative z-10">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight drop-shadow-sm relative z-10">
             Have an idea? <br className="hidden md:block" />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300">Let's build it.</span>
           </h2>
@@ -38,7 +38,7 @@ export default function HomeCTA() {
           <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
             <Link 
               to="/contact" 
-              className="group relative px-10 py-4 rounded-full bg-[linear-gradient(135deg,#2563eb,#06b6d4)] text-white text-lg font-bold shadow-[0_8px_20px_rgba(37,99,235,0.2)] dark:shadow-[0_8px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_25px_rgba(6,182,212,0.4)] transition-all duration-300 overflow-hidden inline-block text-center"
+              className="w-full sm:w-auto group relative px-10 py-4 rounded-full bg-[linear-gradient(135deg,#2563eb,#06b6d4)] text-white text-lg font-bold shadow-[0_8px_20px_rgba(37,99,235,0.2)] dark:shadow-[0_8px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_25px_rgba(6,182,212,0.4)] transition-all duration-300 overflow-hidden inline-block text-center"
             >
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
               <span className="relative drop-shadow-sm flex items-center justify-center gap-2">
@@ -52,7 +52,7 @@ export default function HomeCTA() {
             
             <Link 
               to="/projects"
-              className="px-10 py-4 rounded-full bg-white/50 dark:bg-white/[0.03] border border-gray-200/80 dark:border-white/10 text-gray-800 dark:text-white text-lg font-bold backdrop-blur-md hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none hover:border-blue-300/50 dark:hover:border-blue-400/50 inline-block"
+              className="w-full sm:w-auto px-10 py-4 rounded-full bg-white/50 dark:bg-white/[0.03] border border-gray-200/80 dark:border-white/10 text-gray-800 dark:text-white text-lg font-bold backdrop-blur-md hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none hover:border-blue-300/50 dark:hover:border-blue-400/50 inline-block"
             >
               View My Work
             </Link>

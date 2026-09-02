@@ -26,7 +26,7 @@ export default function HomeAbout() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
           
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -35,7 +35,7 @@ export default function HomeAbout() {
             transition={{ duration: 0.6 }}
             className="md:col-span-5 flex justify-center"
           >
-            <div className="relative w-64 sm:w-72 md:w-full md:max-w-[320px] aspect-[4/5] mx-auto group">
+            <div className="relative w-56 sm:w-64 md:w-full md:max-w-[320px] aspect-[4/5] mx-auto group">
               {/* Glowing animated blur behind the image */}
               <motion.div 
                 animate={{ rotate: 360 }}
