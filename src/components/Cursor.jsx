@@ -10,14 +10,9 @@ import ContactCursor from './ContactCursor'
 export default function Cursor() {
   const [pos, setPos] = useState({ x: -100, y: -100 })
   const [isHovering, setIsHovering] = useState(false)
-  const [isTouch, setIsTouch] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
-      setIsTouch(true)
-      return
-    }
 
     const move = (e) => {
       setPos({ x: e.clientX, y: e.clientY })
@@ -28,11 +23,19 @@ export default function Cursor() {
       setIsHovering(isInteractive);
     }
 
-    window.addEventListener('mousemove', move, { passive: true })
-    return () => window.removeEventListener('mousemove', move)
-  }, [])
+    const touchMove = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        setPos({ x: e.touches[0].clientX, y: e.touches[0].clientY })
+      }
+    }
 
-  if (isTouch) return null;
+    window.addEventListener('mousemove', move, { passive: true })
+    window.addEventListener('touchmove', touchMove, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', move)
+      window.removeEventListener('touchmove', touchMove)
+    }
+  }, [])
 
   // On Home page, render the Dragon cursor instead of the standard one
   if (location.pathname === '/') {

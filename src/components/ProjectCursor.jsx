@@ -13,7 +13,7 @@ export default function ProjectCursor() {
   const pos = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
   const activeParticles = useRef([]);
 
-  const isTouch = useRef(false);
+
   const isHovering = useRef(false);
   const animFrameId = useRef(null);
   const prefersReducedMotion = useReducedMotion();
@@ -21,12 +21,25 @@ export default function ProjectCursor() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const handleTouchStart = () => {
-      isTouch.current = true;
+    const handleTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      if (!visible) setVisible(true);
+      
+      const target = e.target.closest('.project-card-hover');
+      if (target) {
+        isHovering.current = true;
+      } else {
+        isHovering.current = false;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     };
 
     const handleMouseMove = (e) => {
-      if (isTouch.current) return;
       mouse.current = { x: e.clientX, y: e.clientY };
       if (!visible) setVisible(true);
 
@@ -42,6 +55,7 @@ export default function ProjectCursor() {
     const handleMouseEnter = () => setVisible(true);
 
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
@@ -49,7 +63,7 @@ export default function ProjectCursor() {
     let rotation = 0;
 
     const render = () => {
-      if (!isTouch.current && !prefersReducedMotion) {
+      if (!prefersReducedMotion) {
         // Instant 1:1 tracking to stick precisely to the pointer
         pos.current.x = mouse.current.x;
         pos.current.y = mouse.current.y;
@@ -121,6 +135,7 @@ export default function ProjectCursor() {
 
     return () => {
       window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
@@ -128,7 +143,7 @@ export default function ProjectCursor() {
     };
   }, [prefersReducedMotion, visible]);
 
-  if (isTouch.current || prefersReducedMotion || !visible) return null;
+  if (prefersReducedMotion || !visible) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999]">

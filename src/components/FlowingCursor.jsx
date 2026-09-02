@@ -881,16 +881,32 @@ export default function FlowingCursor({
       updatePointerMoveData(pointer, posX, posY);
     }
 
+    function handleTouchMove(e) {
+      if (!e.touches || e.touches.length === 0) return;
+      const touch = e.touches[0];
+      let posX = touch.clientX;
+      let posY = touch.clientY;
+      let pointer = pointers[0];
+      if (!pointer.down) {
+        updatePointerDownData(pointer, -1, posX, posY);
+      }
+      updatePointerMoveData(pointer, posX, posY);
+    }
+
     initFramebuffers();
     updateKeywords();
     startAnimation();
 
     // Listen on window since the canvas is pointer-events-none
-    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchstart", handleTouchMove, { passive: true });
 
     return () => {
       stopAnimation();
       window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchstart", handleTouchMove);
     };
   }, [
     simResolution,

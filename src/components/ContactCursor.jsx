@@ -12,7 +12,7 @@ export default function ContactCursor() {
   const pos = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
   const activeParticles = useRef([]);
 
-  const isTouch = useRef(false);
+
   const isHovering = useRef(false);
   const hoverText = useRef('');
   const animFrameId = useRef(null);
@@ -21,12 +21,27 @@ export default function ContactCursor() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const handleTouchStart = () => {
-      isTouch.current = true;
+    const handleTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      if (!visible) setVisible(true);
+      
+      const target = e.target.closest('.contact-hover');
+      if (target) {
+        isHovering.current = true;
+        hoverText.current = target.getAttribute('data-cursor-text') || '';
+      } else {
+        isHovering.current = false;
+        hoverText.current = '';
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     };
 
     const handleMouseMove = (e) => {
-      if (isTouch.current) return;
       mouse.current = { x: e.clientX, y: e.clientY };
       if (!visible) setVisible(true);
 
@@ -44,6 +59,7 @@ export default function ContactCursor() {
     const handleMouseEnter = () => setVisible(true);
 
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
@@ -51,7 +67,7 @@ export default function ContactCursor() {
     let tick = 0;
 
     const render = () => {
-      if (!isTouch.current && !prefersReducedMotion) {
+      if (!prefersReducedMotion) {
         pos.current.x += (mouse.current.x - pos.current.x) * 0.35;
         pos.current.y += (mouse.current.y - pos.current.y) * 0.35;
         tick += 0.05;
@@ -118,6 +134,7 @@ export default function ContactCursor() {
 
     return () => {
       window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
@@ -125,7 +142,7 @@ export default function ContactCursor() {
     };
   }, [prefersReducedMotion, visible]);
 
-  if (isTouch.current || prefersReducedMotion || !visible) return null;
+  if (prefersReducedMotion || !visible) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999]">

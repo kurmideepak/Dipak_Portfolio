@@ -10,7 +10,7 @@ export default function SkillsCursor() {
   const pos = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
   const activeParticles = useRef([]);
 
-  const isTouch = useRef(false);
+
   const isHovering = useRef(false);
   const hoverTarget = useRef(null);
   const animFrameId = useRef(null);
@@ -19,18 +19,30 @@ export default function SkillsCursor() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Detect touch
-    const handleTouchStart = () => {
-      isTouch.current = true;
+    const handleTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      if (!visible) setVisible(true);
+      
+      const target = e.target.closest('.skill-card-hover');
+      if (target) {
+        isHovering.current = true;
+        hoverTarget.current = target.getBoundingClientRect();
+      } else {
+        isHovering.current = false;
+        hoverTarget.current = null;
+      }
     };
 
-    // Track mouse
+    const handleTouchMove = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    };
+
     const handleMouseMove = (e) => {
-      if (isTouch.current) return;
       mouse.current = { x: e.clientX, y: e.clientY };
       if (!visible) setVisible(true);
 
-      // Check for hover target
       const target = e.target.closest('.skill-card-hover');
       if (target) {
         isHovering.current = true;
@@ -45,12 +57,13 @@ export default function SkillsCursor() {
     const handleMouseEnter = () => setVisible(true);
 
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
     const render = () => {
-      if (!isTouch.current && !prefersReducedMotion) {
+      if (!prefersReducedMotion) {
         // Interpolate position
         let targetX = mouse.current.x;
         let targetY = mouse.current.y;
@@ -130,6 +143,7 @@ export default function SkillsCursor() {
 
     return () => {
       window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
@@ -137,7 +151,7 @@ export default function SkillsCursor() {
     };
   }, [prefersReducedMotion, visible]);
 
-  if (isTouch.current || prefersReducedMotion || !visible) return null;
+  if (prefersReducedMotion || !visible) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999]">

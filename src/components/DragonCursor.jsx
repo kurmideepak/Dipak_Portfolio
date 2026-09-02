@@ -4,7 +4,6 @@ const N = 35;
 const MAX_PARTICLES = 10;
 
 export default function DragonCursor() {
-  const [isTouch, setIsTouch] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const svgRef = useRef(null);
   const useRefs = useRef([]);
@@ -23,10 +22,6 @@ export default function DragonCursor() {
   const animTime = useRef(0);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
-      setIsTouch(true);
-      return;
-    }
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mediaQuery.matches);
     const handleMotionChange = (e) => setReducedMotion(e.matches);
@@ -36,7 +31,7 @@ export default function DragonCursor() {
   }, []);
 
   useEffect(() => {
-    if (isTouch || reducedMotion) return;
+    if (reducedMotion) return;
 
     // Initialize positions
     pointer.current.x = window.innerWidth / 2;
@@ -70,7 +65,19 @@ export default function DragonCursor() {
       }
     };
 
+    const handleTouchMove = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        pointer.current.x = e.touches[0].clientX;
+        pointer.current.y = e.touches[0].clientY;
+        lastMoveTime.current = Date.now();
+        idleTime.current = 0;
+        isVisible.current = true;
+      }
+    };
+
     window.addEventListener('pointermove', handleMouseMove, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchstart', handleTouchMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
     document.addEventListener('mouseover', handleMouseOver);
@@ -191,14 +198,15 @@ export default function DragonCursor() {
 
     return () => {
       window.removeEventListener('pointermove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchstart', handleTouchMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseover', handleMouseOver);
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, [isTouch, reducedMotion]);
+  }, [reducedMotion]);
 
-  if (isTouch) return null;
 
   if (reducedMotion) {
     return (
