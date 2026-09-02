@@ -1,57 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion, useAnimationFrame, useMotionTemplate } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaEnvelope, FaJava, FaReact, FaNodeJs, FaAndroid, FaCode } from 'react-icons/fa6';
-import { SiSpringboot, SiMongodb } from 'react-icons/si';
-import profileImg from '../assets/profile.jpg';
+import React, { useState, useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion, useAnimationFrame } from 'framer-motion';
 
-const roles = ['Full Stack Developer', 'Java Developer', 'Android Developer'];
+const TYPEWRITER_WORDS = ["Custom Software Solutions", "Modern Digital Experiences", "Responsive Landing Pages", "Scalable SaaS Architectures"];
+const TYPEWRITER_COLORS = [
+  "from-blue-600 via-cyan-500 to-purple-600 dark:from-blue-400 dark:via-cyan-300 dark:to-purple-400", 
+  "from-purple-600 via-pink-500 to-red-500 dark:from-purple-400 dark:via-pink-300 dark:to-red-400", 
+  "from-emerald-500 via-teal-400 to-cyan-500 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400", 
+  "from-orange-500 via-amber-400 to-yellow-500 dark:from-orange-400 dark:via-amber-300 dark:to-yellow-400" 
+];
 
-function TypingEffect() {
-  const [idx, setIdx] = useState(0);
-  const [sub, setSub] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
+const TypewriterEffect = () => {
+  const [index, setIndex] = useState(0);
+  const [subIndex, setSubIndex] = useState(0);
+  const [blink, setBlink] = useState(true);
 
   useEffect(() => {
-    let timeout;
-    const currentRole = roles[idx];
-    
-    if (isDeleting) {
-      timeout = setTimeout(() => {
-        setSub(currentRole.substring(0, sub.length - 1));
-        if (sub.length === 0) {
-          setIsDeleting(false);
-          setIdx((prev) => (prev + 1) % roles.length);
-        }
-      }, 40);
-    } else {
-      timeout = setTimeout(() => {
-        setSub(currentRole.substring(0, sub.length + 1));
-        if (sub.length === currentRole.length) {
-          timeout = setTimeout(() => setIsDeleting(true), 2500);
-        }
-      }, 80);
+    const timeout = setInterval(() => setBlink((prev) => !prev), 500);
+    return () => clearInterval(timeout);
+  }, []);
+
+  useEffect(() => {
+    if (subIndex === TYPEWRITER_WORDS[index].length + 1) {
+      const timeout = setTimeout(() => {
+        setSubIndex(0);
+        setIndex((prev) => (prev + 1) % TYPEWRITER_WORDS.length);
+      }, 2500);
+      return () => clearTimeout(timeout);
     }
+
+    const timeout = setTimeout(() => {
+      setSubIndex((prev) => prev + 1);
+    }, Math.max(40, parseInt(Math.random() * 80)));
+
     return () => clearTimeout(timeout);
-  }, [sub, isDeleting, idx]);
+  }, [subIndex, index]);
 
   return (
-    <span className="inline-block min-w-[220px]">
-      <motion.span 
-        animate={{ backgroundPosition: prefersReducedMotion ? '0% 50%' : ['0% 50%', '100% 50%', '0% 50%'] }}
-        transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
-        className="bg-clip-text text-transparent bg-[linear-gradient(90deg,#3b82f6,#06b6d4,#a855f7,#3b82f6)] bg-[length:200%_auto] font-bold"
-      >
-        {sub}
-      </motion.span>
-      <motion.span 
-        animate={{ opacity: prefersReducedMotion ? 1 : [1, 0] }} 
-        transition={{ repeat: Infinity, duration: 0.8 }}
-        className="inline-block w-[3px] h-[1.1em] bg-cyan-500 dark:bg-cyan-400 ml-1 align-middle"
-      />
+    <span className={`bg-clip-text text-transparent bg-gradient-to-r ${TYPEWRITER_COLORS[index]} drop-shadow-sm transition-colors duration-500 whitespace-nowrap lg:whitespace-normal`}>
+      {`${TYPEWRITER_WORDS[index].substring(0, subIndex)}`}
+      <span className={`inline-block w-[3px] md:w-[4px] h-[0.9em] bg-gray-900 dark:bg-white ml-1 md:ml-2 align-baseline rounded-full transition-opacity duration-100 ${blink ? 'opacity-100' : 'opacity-0'}`}></span>
     </span>
   );
-}
+};
+import { FaGithub, FaLinkedin, FaEnvelope, FaJava, FaReact, FaNodeJs } from 'react-icons/fa6';
+import { SiSpringboot, SiMongodb } from 'react-icons/si';
+import { Link } from 'react-router-dom';
+import profileImg from '../assets/profile.jpeg';
 
 const TechBadge = ({ icon: Icon, name, color, smoothX, smoothY, depth }) => {
   const prefersReducedMotion = useReducedMotion();
@@ -175,25 +169,21 @@ const InteractiveProfile = ({ smoothX, smoothY }) => {
     >
       {/* Aurora Light Effect / Profile Halo */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
-        {/* Layer 1: Cyan Glow */}
         <motion.div 
           animate={{ scale: [1, 1.05, 1], opacity: [0.25, 0.4, 0.25] }}
           transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-          className="absolute w-[140%] h-[140%] rounded-full bg-cyan-500/20 dark:bg-cyan-500/20 blur-3xl mix-blend-screen dark:mix-blend-lighten"
+          className="absolute w-[140%] h-[140%] rounded-full bg-cyan-500/20 blur-3xl mix-blend-screen dark:mix-blend-lighten"
         />
-        {/* Layer 2: Blue Glow */}
         <motion.div 
           animate={{ scale: [1.05, 1, 1.05], opacity: [0.2, 0.35, 0.2] }}
           transition={{ repeat: Infinity, duration: 7, ease: "easeInOut", delay: 1 }}
-          className="absolute w-[120%] h-[120%] rounded-full bg-blue-500/20 dark:bg-blue-600/30 blur-3xl mix-blend-screen dark:mix-blend-lighten"
+          className="absolute w-[120%] h-[120%] rounded-full bg-blue-500/20 blur-3xl mix-blend-screen dark:mix-blend-lighten"
         />
-        {/* Layer 3: Purple Glow */}
         <motion.div 
           animate={{ scale: [1, 1.08, 1], opacity: [0.15, 0.3, 0.15] }}
           transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 0.5 }}
-          className="absolute w-[130%] h-[130%] rounded-full bg-purple-500/10 dark:bg-purple-500/20 blur-3xl mix-blend-screen dark:mix-blend-lighten"
+          className="absolute w-[130%] h-[130%] rounded-full bg-purple-500/10 blur-3xl mix-blend-screen dark:mix-blend-lighten"
         />
-        {/* Layer 4: Subtle White Highlight */}
         <motion.div 
           animate={{ opacity: isHovered ? 0.2 : 0.1 }}
           transition={{ duration: 0.8 }}
@@ -222,10 +212,9 @@ const InteractiveProfile = ({ smoothX, smoothY }) => {
               animate={{ scale: isHovered ? 1.06 : 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               src={profileImg} 
-              alt="Dipak Kurmi Profile" 
-              className="w-full h-full object-cover"
+              alt="Dipak Kurmi" 
+              className="w-full h-full object-cover object-top"
             />
-            {/* Subtle photographic overlay */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: isHovered ? 1 : 0 }}
@@ -260,38 +249,17 @@ const InteractiveProfile = ({ smoothX, smoothY }) => {
           />
           <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
         </div>
-        <span className="text-xs font-bold text-gray-800 dark:text-gray-200 tracking-wide">Available for opportunities</span>
+        <span className="text-xs font-bold text-gray-800 dark:text-gray-200 tracking-wide">Available for New Projects</span>
       </motion.div>
     </motion.div>
   );
 };
-
-// Background elements moved to GlobalBackground.jsx
-
-const StatCard = ({ title, desc, icon: Icon }) => (
-  <motion.div
-    whileHover={{ y: -5, scale: 1.02 }}
-    className="flex items-center gap-4 p-5 rounded-2xl bg-white/40 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/10 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] group transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-400/30 hover:shadow-lg"
-  >
-    <div className="w-12 h-12 rounded-xl bg-blue-50/80 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 shadow-sm border border-white/50 dark:border-transparent">
-      <Icon className="text-xl" />
-    </div>
-    <div>
-      <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 drop-shadow-sm">{title}</div>
-      <div className="text-sm font-bold text-gray-900 dark:text-gray-100 drop-shadow-sm">{desc}</div>
-    </div>
-  </motion.div>
-);
 
 export default function Hero() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-  
-  // Real mouse coordinates for the MouseGlow (no spring delay for the light)
-  const realMouseX = useMotionValue(window.innerWidth / 2);
-  const realMouseY = useMotionValue(window.innerHeight / 2);
   
   const prefersReducedMotion = useReducedMotion();
 
@@ -300,15 +268,10 @@ export default function Hero() {
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
     
-    // For MouseGlow
-    realMouseX.set(clientX);
-    realMouseY.set(clientY);
-    
-    // For Parallax (normalized)
     if (window.innerWidth >= 768) {
       const x = (clientX / innerWidth - 0.5) * 2;
       const y = (clientY / innerHeight - 0.5) * 2;
-      mouseX.set(x * 20); // 20px max movement
+      mouseX.set(x * 20); 
       mouseY.set(y * 20);
     }
   };
@@ -331,7 +294,6 @@ export default function Hero() {
       onMouseMove={handleMouseMove}
       className="relative min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden"
     >
-
       <div className="max-w-7xl mx-auto px-6 relative z-20 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center min-h-[70vh]">
           
@@ -345,55 +307,58 @@ export default function Hero() {
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-semibold text-sm mb-6 border border-blue-200/50 dark:border-blue-500/30 shadow-sm backdrop-blur-md">
               <span className="animate-wave text-lg origin-bottom-right inline-block">👋</span> 
               <span>Hi, I'm Dipak Kurmi</span>
+              <span className="opacity-40 mx-1">|</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 font-bold tracking-wide">Software Engineer</span>
             </motion.div>
 
-            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4 leading-tight">
-              <span className="block mb-2 drop-shadow-sm">Software Developer</span>
-              <span className="block text-2xl sm:text-3xl lg:text-4xl text-gray-600 dark:text-gray-300 font-bold mt-3 lg:mt-4 drop-shadow-sm">
-                And <TypingEffect />
+            <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-2 leading-tight">
+              I Build Modern <br className="hidden md:block"/>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 dark:from-blue-400 dark:via-cyan-300 dark:to-purple-400 drop-shadow-sm">
+                Websites & Web Applications
               </span>
             </motion.h1>
 
-            <motion.p variants={itemVariants} className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mb-8 leading-relaxed font-medium drop-shadow-sm">
-              I build efficient, scalable, and user-friendly software solutions.
-            </motion.p>
+            <motion.div variants={itemVariants} className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-700 dark:text-gray-300 mb-6 min-h-[32px] sm:min-h-[36px]">
+              Specializing in <TypewriterEffect />
+            </motion.div>
 
-            {/* Tech Badges with Parallax */}
-            <motion.div variants={itemVariants} className="flex flex-wrap justify-center lg:justify-start gap-3 mb-10">
-              <TechBadge icon={FaJava} name="Java" color="#f89820" smoothX={smoothX} smoothY={smoothY} depth={0.6} />
-              <TechBadge icon={SiSpringboot} name="Spring Boot" color="#6db33f" smoothX={smoothX} smoothY={smoothY} depth={0.4} />
-              <TechBadge icon={FaReact} name="React" color="#61DAFB" smoothX={smoothX} smoothY={smoothY} depth={0.7} />
-              <TechBadge icon={FaNodeJs} name="Node.js" color="#339933" smoothX={smoothX} smoothY={smoothY} depth={0.5} />
-              <TechBadge icon={SiMongodb} name="MongoDB" color="#47A248" smoothX={smoothX} smoothY={smoothY} depth={0.65} />
+            <motion.p variants={itemVariants} className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mb-6 leading-relaxed font-medium drop-shadow-sm">
+              I partner with forward-thinking businesses and startups to turn ambitious ideas into highly performant, scalable, and visually stunning digital products.
+            </motion.p>
+            
+            {/* Service Labels */}
+            <motion.div variants={itemVariants} className="flex flex-wrap justify-center lg:justify-start gap-2 mb-8">
+              <span className="px-3 py-1.5 rounded-full bg-white/40 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 text-sm font-semibold text-gray-700 dark:text-gray-300 shadow-sm hover:border-blue-300 dark:hover:border-blue-500/50 transition-colors cursor-default">✨ Custom Development</span>
+              <span className="px-3 py-1.5 rounded-full bg-white/40 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 text-sm font-semibold text-gray-700 dark:text-gray-300 shadow-sm hover:border-blue-300 dark:hover:border-blue-500/50 transition-colors cursor-default">⚡ High Performance</span>
+              <span className="px-3 py-1.5 rounded-full bg-white/40 dark:bg-white/[0.05] border border-gray-200/50 dark:border-white/10 text-sm font-semibold text-gray-700 dark:text-gray-300 shadow-sm hover:border-blue-300 dark:hover:border-blue-500/50 transition-colors cursor-default">📱 Responsive Design</span>
             </motion.div>
 
             {/* CTA & Socials */}
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center lg:justify-start">
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center lg:justify-start mb-10">
               <div className="flex gap-4 w-full sm:w-auto">
-                <motion.a 
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  whileTap={{ scale: 0.95 }}
-                  href="#projects" 
-                  className="flex-1 sm:flex-none group relative px-8 py-3.5 rounded-full bg-[linear-gradient(135deg,#2563eb,#06b6d4)] text-white font-bold shadow-[0_8px_20px_rgba(37,99,235,0.2)] dark:shadow-[0_8px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_25px_rgba(6,182,212,0.4)] transition-all duration-300 overflow-hidden text-center"
-                >
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                  <span className="relative flex items-center justify-center gap-2 drop-shadow-sm">
-                    View My Work
-                    <motion.span 
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                    >→</motion.span>
-                  </span>
-                </motion.a>
+                <Link to="/projects">
+                  <motion.button 
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full sm:w-auto group relative px-8 py-3.5 rounded-full bg-[linear-gradient(135deg,#2563eb,#06b6d4)] text-white font-bold shadow-[0_8px_20px_rgba(37,99,235,0.2)] dark:shadow-[0_8px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_25px_rgba(6,182,212,0.4)] transition-all duration-300 overflow-hidden text-center"
+                  >
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                    <span className="relative flex items-center justify-center gap-2 drop-shadow-sm">
+                      View My Work
+                      <motion.span animate={{ x: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>→</motion.span>
+                    </span>
+                  </motion.button>
+                </Link>
                 
-                <motion.a 
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  whileTap={{ scale: 0.95 }}
-                  href="#contact" 
-                  className="flex-1 sm:flex-none relative group px-8 py-3.5 rounded-full bg-white/40 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white font-bold backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none hover:border-blue-300/50 dark:hover:border-blue-400/50"
-                >
-                  <span className="relative drop-shadow-sm">Contact Me</span>
-                </motion.a>
+                <Link to="/contact">
+                  <motion.button 
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full sm:w-auto relative group px-8 py-3.5 rounded-full bg-white/40 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white font-bold backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none hover:border-blue-300/50 dark:hover:border-blue-400/50"
+                  >
+                    <span className="relative drop-shadow-sm">Start a Project</span>
+                  </motion.button>
+                </Link>
               </div>
               
               <div className="flex items-center gap-3 mt-4 sm:mt-0 sm:ml-2">
@@ -401,6 +366,15 @@ export default function Hero() {
                 <SocialBtn icon={FaLinkedin} href="https://www.linkedin.com/in/dipak-kurmi-cse" label="LinkedIn" />
                 <SocialBtn icon={FaEnvelope} href="mailto:dipakkurmi@example.com" label="Email" />
               </div>
+            </motion.div>
+
+            {/* Tech Badges with Parallax */}
+            <motion.div variants={itemVariants} className="flex flex-wrap justify-center lg:justify-start gap-3">
+              <TechBadge icon={FaJava} name="Java" color="#f89820" smoothX={smoothX} smoothY={smoothY} depth={0.6} />
+              <TechBadge icon={SiSpringboot} name="Spring Boot" color="#6db33f" smoothX={smoothX} smoothY={smoothY} depth={0.4} />
+              <TechBadge icon={FaReact} name="React" color="#61DAFB" smoothX={smoothX} smoothY={smoothY} depth={0.7} />
+              <TechBadge icon={FaNodeJs} name="Node.js" color="#339933" smoothX={smoothX} smoothY={smoothY} depth={0.5} />
+              <TechBadge icon={SiMongodb} name="MongoDB" color="#47A248" smoothX={smoothX} smoothY={smoothY} depth={0.65} />
             </motion.div>
           </motion.div>
 
@@ -414,20 +388,6 @@ export default function Hero() {
             <InteractiveProfile smoothX={smoothX} smoothY={smoothY} />
           </motion.div>
         </div>
-
-        {/* Hero Feature Cards */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="mt-16 lg:mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto relative z-20"
-        >
-          <motion.div variants={itemVariants}><StatCard title="Focus" desc="Java & Full Stack" icon={FaCode} /></motion.div>
-          <motion.div variants={itemVariants}><StatCard title="Portfolio" desc="6 Featured Projects" icon={FaGithub} /></motion.div>
-          <motion.div variants={itemVariants}><StatCard title="Platforms" desc="Web & Android" icon={FaAndroid} /></motion.div>
-          <motion.div variants={itemVariants}><StatCard title="Mindset" desc="Problem Solver" icon={FaReact} /></motion.div>
-        </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div 

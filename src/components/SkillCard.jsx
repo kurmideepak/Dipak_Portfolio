@@ -3,8 +3,8 @@ import { motion } from 'framer-motion'
 
 export default function SkillCard({ icon, title, desc, level }) {
   return (
-    <motion.div 
-      whileHover={{ y: -6, scale: 1.02 }} 
+    <motion.div
+      whileHover={{ y: -6, scale: 1.02 }}
       className="group relative bg-white/40 dark:bg-white/[0.03] p-5 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-xl dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-gray-200/50 dark:border-white/10 backdrop-blur-md transition-all duration-300 hover:border-blue-300/50 dark:hover:border-blue-400/50 overflow-hidden"
     >
       <div className="flex items-start gap-4 relative z-10">
@@ -25,7 +25,7 @@ export default function SkillCard({ icon, title, desc, level }) {
           </p>
         </div>
       </div>
-      
+
       {/* Background glow on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none mix-blend-screen" />
     </motion.div>

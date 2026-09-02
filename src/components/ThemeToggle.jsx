@@ -24,11 +24,15 @@ export default function ThemeToggle(){
     <motion.button 
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"} 
+      aria-label={dark ? "Switch to Light Mode" : "Switch to Dark Mode"} 
       onClick={()=>setDark(!dark)} 
-      className="fixed right-6 top-24 md:top-28 z-40 p-3 bg-white/40 dark:bg-white/[0.03] backdrop-blur-md border border-gray-200/50 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-full text-gray-800 dark:text-gray-200 overflow-hidden group hover:border-blue-300/50 dark:hover:border-blue-400/50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className={`relative p-2.5 rounded-full overflow-hidden group transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent ${
+        dark 
+          ? 'bg-white/[0.03] border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.15)] hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:border-purple-400/50 focus:ring-purple-500' 
+          : 'bg-white border border-amber-400/40 shadow-[0_0_15px_rgba(251,191,36,0.2)] hover:shadow-[0_0_20px_rgba(251,191,36,0.4)] hover:border-amber-400/60 focus:ring-amber-400'
+      }`}
     >
-      <div className="relative w-5 h-5 flex items-center justify-center">
+      <div className="relative w-5 h-5 flex items-center justify-center z-10">
         <AnimatePresence mode="wait">
           {dark ? (
             <motion.div
@@ -37,7 +41,7 @@ export default function ThemeToggle(){
               animate={{ rotate: 0, opacity: 1, scale: 1 }}
               exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.3, ease: "backOut" }}
-              className="absolute text-blue-300 group-hover:text-blue-400 drop-shadow-[0_0_8px_rgba(147,197,253,0.5)]"
+              className="absolute text-purple-300 group-hover:text-purple-200 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]"
             >
               <FaMoon className="text-lg" />
             </motion.div>
@@ -48,18 +52,21 @@ export default function ThemeToggle(){
               animate={{ rotate: 0, opacity: 1, scale: 1 }}
               exit={{ rotate: -90, opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.3, ease: "backOut" }}
-              className="absolute text-amber-500 group-hover:text-amber-600 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]"
+              className="absolute text-amber-500 group-hover:text-amber-600 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]"
             >
               <FaSun className="text-lg" />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      {/* Subtle internal glow background */}
+      <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${dark ? 'bg-gradient-to-tr from-purple-500/10 to-cyan-500/10' : 'bg-gradient-to-tr from-amber-400/10 to-orange-500/10'}`} />
       
       {/* Tooltip */}
-      <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform origin-right px-3 py-1.5 bg-gray-900/90 dark:bg-white/90 backdrop-blur-sm text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
-        {dark ? "Light mode" : "Dark mode"}
-        <div className="absolute top-1/2 -right-1 -translate-y-1/2 border-4 border-transparent border-l-gray-900/90 dark:border-l-white/90" />
+      <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-transform origin-top px-3 py-1.5 bg-gray-900/90 dark:bg-white/90 backdrop-blur-sm text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-xl whitespace-nowrap pointer-events-none z-50">
+        {dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/90 dark:border-b-white/90" />
       </div>
     </motion.button>
   )

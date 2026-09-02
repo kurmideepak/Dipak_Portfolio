@@ -5,7 +5,6 @@ import { motion, useScroll, useSpring } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import BackToTop from './components/BackToTop'
-import ThemeToggle from './components/ThemeToggle'
 import Cursor from './components/Cursor'
 import GlobalBackground from './components/GlobalBackground'
 
@@ -36,7 +35,6 @@ export default function App(){
 
       <Cursor />
       <Navbar />
-      <ThemeToggle />
       
       <div className="relative z-10">
         <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>

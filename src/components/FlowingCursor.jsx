@@ -20,14 +20,14 @@ export default function FlowingCursor({
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
-    
+
     let animationId = null;
     let isVisible = true;
     let gl, ext;
     let dye, velocity, divergence, curlFBO, pressureFBO;
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0;
-    
+
     const pointers = [
       {
         id: -1,
@@ -42,7 +42,7 @@ export default function FlowingCursor({
         color: { r: 0.3, g: 0.1, b: 0.6 },
       },
     ];
-    
+
     const config = {
       SIM_RESOLUTION: simResolution,
       DYE_RESOLUTION: dyeResolution,
@@ -631,7 +631,7 @@ export default function FlowingCursor({
       gl.uniform2f(curlProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
       gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
       blit(curlFBO);
-      
+
       vorticityProgram.bind();
       gl.uniform2f(vorticityProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
       gl.uniform1i(vorticityProgram.uniforms.uVelocity, velocity.read.attach(0));
@@ -640,18 +640,18 @@ export default function FlowingCursor({
       gl.uniform1f(vorticityProgram.uniforms.dt, dt);
       blit(velocity.write);
       velocity.swap();
-      
+
       divergenceProgram.bind();
       gl.uniform2f(divergenceProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
       gl.uniform1i(divergenceProgram.uniforms.uVelocity, velocity.read.attach(0));
       blit(divergence);
-      
+
       clearProgram.bind();
       gl.uniform1i(clearProgram.uniforms.uTexture, pressureFBO.read.attach(0));
       gl.uniform1f(clearProgram.uniforms.value, config.PRESSURE);
       blit(pressureFBO.write);
       pressureFBO.swap();
-      
+
       pressureProgram.bind();
       gl.uniform2f(pressureProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
       gl.uniform1i(pressureProgram.uniforms.uDivergence, divergence.attach(0));
@@ -660,14 +660,14 @@ export default function FlowingCursor({
         blit(pressureFBO.write);
         pressureFBO.swap();
       }
-      
+
       gradientSubtractProgram.bind();
       gl.uniform2f(gradientSubtractProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
       gl.uniform1i(gradientSubtractProgram.uniforms.uPressure, pressureFBO.read.attach(0));
       gl.uniform1i(gradientSubtractProgram.uniforms.uVelocity, velocity.read.attach(1));
       blit(velocity.write);
       velocity.swap();
-      
+
       advectionProgram.bind();
       gl.uniform2f(advectionProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
       if (!ext.supportLinearFiltering) {
@@ -680,7 +680,7 @@ export default function FlowingCursor({
       gl.uniform1f(advectionProgram.uniforms.dissipation, config.VELOCITY_DISSIPATION);
       blit(velocity.write);
       velocity.swap();
-      
+
       if (!ext.supportLinearFiltering) {
         gl.uniform2f(advectionProgram.uniforms.dyeTexelSize, dye.texelSizeX, dye.texelSizeY);
       }
@@ -717,7 +717,7 @@ export default function FlowingCursor({
       gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100));
       blit(velocity.write);
       velocity.swap();
-      
+
       gl.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0));
       gl.uniform3f(splatProgram.uniforms.color, color.r, color.g, color.b);
       blit(dye.write);
@@ -884,10 +884,10 @@ export default function FlowingCursor({
     initFramebuffers();
     updateKeywords();
     startAnimation();
-    
+
     // Listen on window since the canvas is pointer-events-none
     window.addEventListener("pointermove", handlePointerMove);
-    
+
     return () => {
       stopAnimation();
       window.removeEventListener("pointermove", handlePointerMove);
@@ -908,7 +908,7 @@ export default function FlowingCursor({
   return (
     <div
       ref={containerRef}
-      className="pointer-events-none fixed inset-0 z-[100] mix-blend-screen"
+      className="pointer-events-none fixed inset-0 z-[100] dark:mix-blend-screen mix-blend-multiply brightness-150 saturate-200 dark:brightness-100 dark:saturate-100"
       style={{ ...style }}
     >
       <canvas
